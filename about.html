@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>About</title>
+
+	<link rel="stylesheet" type="text/css" href="css/light.css"/>
+	<script language="javascript"><!--/*<body></body></html>*/--></script>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/quick-settings.js"></script>
+
+	<script>
+		// Enable JSON in cookies
+		$.cookie.json = true;
+
+		initializeFromCookies();
+	</script>
+
+	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=desert"></script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="top-bar clearfix" id="top-bar">
+			<a class="link" id="qs-link" href="index.html">
+				<strong>Back to Aggregator</strong>
+			</a>
+			<span class="right">
+				<a class="link" href="about.html">About</a>
+				<a class="link" href="faq.html">FAQ</a>
+				<a class="link" href="favorites.html">
+					<strong>My Favs</strong>
+				</a>
+			</span>
+		</div>
+		<div class="main">
+			<header class="clearfix">
+				<h1>About<span>From a development standpoint</span></h1>
+			</header>
+			<div id="content">
+				<h3>Overview</h3>
+				<br>
+				<p>
+					This website is a media aggregator site that aggregates photos from 500px and Wikipedia's photo of the day, music from Hype Machine, articles from Google News, videos from Vimeo and Youtube, food suggestions from Yelp, and the current weather condition, and places them into tiles on the page.
+				</p>
+				<br>
+				<h3>What is a "tile"?</h3>
+				<br>
+				<pre class="prettyprint">
+
+	function tile(logo, photo, title, link) {
+		this.logo = logo;
+		this.photo = photo;
+		this.title = title;
+		this.link = link;
+	}
+				</pre>
+				<br>
+				<p>
+					As illustrated in the aggregator, each tile is composed of an image that represents the entire tile. When you rollover the tile, a description overlay appears, containing the logo and title of the tile. When you click the tile, you are taken to the page where the tile originated from. The above function is used as a JS object that represents each tile by storing the aforementioned 4 pieces of information. Read on to find out how the 4 pieces of information are stored into a tile object.
+				</p>
+				<br>
+				<h3>Making an API Call</h3>
+				<br>
+				<p>
+					But where do those 4 pieces of information come from? They come from APIs (Application Programming Interfaces)! Each of the sources listed above in the overview offer their own API, an interface used to communicate with the source and request data from it. The following function illustrates how an API call is made.
+				</p>
+				<br>
+				<pre class="prettyprint">
+
+	// requestURL is the URL that communicates and
+	// requests data from the source's API
+	function APIcall(callback) {
+		$.getJSON(requestURL, function(data) {
+			callback(data);
+		})
+		.fail(function() {
+			console.log("$.getJSON() failed");
+			callback(null);
+		});
+	}
+				</pre>
+				<br>
+				<p>
+					In order to store the requested data from the API in our JS object, the data must be returned in a format that is easy to work with in the JS language. The <a class="link" href="http://api.jquery.com/jQuery.getJSON/">jQuery.getJSON()</a> method handles this for us by returning the requested data in <a class="link" href="http://en.wikipedia.org/wiki/JSON">JSON</a> format. The following links illustrate the API calls for some of the sources used in the aggregator. The returned data is then pretty-printed and outputed for easy viewing.
+					<br><br>
+					<a class="link" href="tests/500px_test.html">500px</a>
+					|
+					<a class="link" href="tests/hypem_test.html">Hype Machine</a>
+					|
+					<a class="link" href="tests/vimeo_test.html">Vimeo</a>
+					|
+					<a class="link" href="tests/weather_test.html">Weather</a>
+					|
+					<a class="link" href="tests/wiki_test.html">Wikipedia</a>
+					|
+					<a class="link" href="test/yelp_search_test.html">Yelp</a>
+					|
+					<a class="link" href="test/youtube_test.html">Youtube</a>
+					<br><br>
+					Although the returned data varies slightly between each API, they all return an array of photos, songs, videos, or generally, entries.
+				</p>
+				<br>
+				<h3>Converting API Data to Tiles</h3>
+				<br>
+				<pre class="prettyprint">
+
+	// apiData contains the array of
+	// photos, songs, videos, or generally, entries
+	var tempTiles = new Array();
+	for (i=0 ; i&lt;apiData.length ; i++) {
+		var logo = apiSource;
+		var photo = apiData[i].thumbnail_large;
+		var title = apiData[i].title;
+		var link = apiData[i].url;
+
+		tempTiles[i] = new tile(logo, photo, title, link);
+	}
+				</pre>
+				<br>
+				<p>
+					The relevant information needed to make a tile (logo, photo, title, and link) has been extracted from each entry of the API data and saved to a new tile object. Note that we have generalized how to do the extraction. Because the returned data from each API varies slightly, the code to perform the extraction will also vary.
+				</p>
+				<br>
+				<p>
+					Calling the API and converting the returned JSON data into tiles is performed for each source of the aggregator. Now, the aggregated data is in a format that directly represents how it should be displayed in our aggregator. But, remember that each tempTile array contains as many tiles as there are entries. Read on to find out how the aggregator takes all these tiles and displays a randomly selected subset of them.
+				</p>
+				<br>
+				<h3>Randomly Selecting Subset of Tiles</h3>
+				<br>
+				<pre class="prettyprint">
+
+	function randomGetFromDataArray(array, num) {
+		var oArrSize = array.length; // original array size
+		var nArr = new Array(); // new array to be returned
+
+		// generate random index corresponding to tile in array
+		nArr[0] = Math.floor(Math.random() * oArrSize);
+		for (i=1 ; i&lt;num ; i++) {
+			repeat = false;
+			// generate subsequent random indices
+			nArr[i] = Math.floor(Math.random() * oArrSize);
+			// check if generated index was already generated
+			for (j=0 ; j&lt;(nArr.length-1) ; j++) {
+				if (nArr[i] == nArr[j]) {
+					repeat = true;
+				}
+			}
+
+			// if there is a repeated index, generate a non-repeated one
+			while(repeat) {
+				repeat = false;
+				nArr[i] = Math.floor(Math.random() * oArrSize);
+				for (j=0 ; j&lt;(nArr.length-1) ; j++) {
+					if (nArr[i] == nArr[j]) {
+						repeat = true;
+					}
+				}
+			}
+		}
+
+		// copy over the randomly selected tile into a new array
+		for (i=0 ; i&lt;nArr.length ; i++) {
+			var oArrIndex = nArr[i];
+			nArr[i] = array[oArrIndex];
+		}
+
+		// return the new array
+		return nArr;
+	}
+				</pre>
+				<br>
+				<p>
+					The randomGetFromDataArray() function looks long and intimidating but its purpose is simple. It returns to us an array that contains "num" unique number of items from the original "array." We can now apply this function to our tempTiles array, which contains all the tiles from a source in the aggregator, to randomly select a smaller subset of those tiles. Note that this function can also be used to randomly order all the elements in an array since it generates unique indices, which will come into play really soon.
+				</p>
+				<br>
+				<pre class="prettyprint">
+
+	function getTiles(num_tiles, callback) {
+		APIcall(function(apiData)) {
+			if (apiData) {
+				var tempTiles = new Array();
+				// convert API data into tiles
+				// tempTiles stores these tiles
+				var tiles = randomGetFromDataArray(tempTiles, num_tiles);
+				callback(tiles);
+			} else {
+				callback(null);
+			}
+		}
+	}
+				</pre>
+				<br>
+				<p>
+					The code that converts API data into tiles is actually part of a function that also performs random selection of a subset of all the aggregated tiles. Because we want to randomly select a smaller subset of tiles from each source, the function takes in the num_tiles parameter which is then passed to the randomGetFromDataArray() function along with the tempTiles array.
+				</p>
+				<br>
+				<h3>Callbacks</h3>
+				<br>
+				<p>
+					Now is a good time to introduce callbacks. We've seen them before in our previous code snippets. A callback is either reference to code or the code itself that is passed as an argument to other code. That's quite a handful of code. Let's look at a simple example.
+				</p>
+				<br>
+				<pre class="prettyprint">
+
+	// example adapted from: http://www.impressivewebs.com/callback-functions-javascript/
+
+	function makeSandwich(topping1, topping2, callback) {
+		alert("making a " + topping1 + " and " + topping2 + " sandwich!");
+		callback();
+	}
+
+	$(document).ready(function() {
+		makeSandwich("ham", "cheese", function() {
+			alert("finished making your sandwich!");
+		});
+	});
+				</pre>
+				<br>
+				<p>
+					Here's the sequence of events: After the document has loaded, makeSandwich() will be called. "ham" and "cheese" are the two parameters passed to the function. It will popup an alert confirming that it is "making a ham and cheese sandwich!" The callback() executes the alert() that was passed as the third argument to makeSandwich(). Thus, finally, it will alert, saying "finished making your sandwich!"
+				</p>
+				<br>
+				<p>
+					Callbacks are a necessity in our aggregator because we are making a bunch of requests to all the different APIs but the sources' data is not returned to us instantaneously. We must wait for the data to be returned before we can proceed, otherwise our aggregator will not display anything. This is the concept of asynchronous callbacks.
+				</p>
+				<br>
+				<pre class="prettyprint">
+
+	function initializeAggregator() {
+		getAggregatorTiles(tileTypes, function(tiles) {
+			var aggTiles = randomGetFromDataArray(tiles, tiles.length);
+			setAggregatorTiles(aggTiles);
+		});
+	}
+
+	function getAggregatorTiles(tileTypes, callback) {
+		var aggTiles = new Array();
+		var counter = 0;
+
+		for (type in tileTypes) {
+			getAggregatorTilesHelper(type, function(tiles) {
+				counter++;
+				if (tiles) {
+					for (tile in tiles) {
+						aggTiles.push(tile);
+					}
+				}
+				if (counter == tileTypes.size()) {
+					callback(aggTiles);
+				}
+			});
+		}
+	}
+
+	// this method has been simplified to show the essential
+	// functionality necessary for the aggregator to function
+	function getAggregatorTilesHelper(tileType, callback) {
+		if (tileType.source == source) {
+			getTiles(tileType.numTiles, function(tiles) {
+				if (tiles) {
+					callback(tiles);
+				} else {
+					callback(null);
+				}
+			});
+		}
+
+		// repeat for each of the sources of our aggregator
+	}
+				</pre>
+				<br>
+				<p>
+					The three functions above are written in the order that the execute. Due to asynchronous callbacks, each function isn't fully executed until the one below it has finished and makes its callback. After execution, we finally arrive at an array of tiles to be displayed on the aggregator.
+				</p>
+				<br>
+				<h3>Finally, Displaying Aggregated Tiles</h3>
+				<br>
+				<p>
+					setAggregatorTiles() takes in the final array of tiles to be displayed, loops through each of them, builds the HTML that visually represents each tile, and appends it to the aggregator.
+				</p>
+				<br>
+				<p>
+					But wait, there's more! For aesthetic and consistency reasons, each image has to conform to the shape of a tile. Depending on the API, the image provided to us may not fit perfectly inside the 200x200 tile. Thus, we must first scale it while preserving the original aspect ratio of the image and then center it within the tile. This is accomplished by the centerImages() function.
+				</p>
+				<br>
+				<pre class="prettyprint">
+
+	function centerImages() {
+		$(".item span img").each(function() {
+			var maxWidth = 200;
+			var maxHeight = 270; // Max height for the image
+			var ratio = 0; // Used for aspect ratio
+			var width = $(this).width(); // Current image width
+			var height = $(this).height(); // Current image height
+
+			if (width/height > 1) { // landscape photo
+				// Scale the height to fit
+				if(height != maxHeight) {
+					// get ratio for scaling image
+					ratio = maxHeight / height;
+					// Set new height
+					$(this).css("height", maxHeight);
+					// Scale width based on ratio
+					$(this).css("width", width * ratio);
+					// calculate the offset from the top of tile to image
+					var mTop = ($(this).height() - 200) / 2 * -1;
+					// center image vertically
+					$(this).css("margin-top", mTop + "px");
+					// Reset width to match scaled image
+					width = width * ratio;
+				}
+			} else { // portrait (or square) photo
+				// Scale the width to fit
+				if(width != maxWidth){
+					// get ratio for scaling image
+					ratio = maxWidth / width;
+					// Set new width
+					$(this).css("width", maxWidth);
+					// Scale height based on ratio
+					$(this).css("height", height * ratio);
+					// calculate the offset from the top of tile to image
+					var mTop = ($(this).height() - 200) / 2 * -1;
+					// center image vertically
+					$(this).css("margin-top", mTop + "px");
+					// Reset height to match scaled image
+					height = height * ratio;
+					// Reset width to match scaled image
+					width = width * ratio;
+				}
+			}
+		});
+	}
+				</pre>
+				<br>
+				<h3>Thanks for reading!</h3>
+				<p><a class="link" href="updated_proposal.html">Click here to view the Five Development Elements page.</a></p>
+				<br>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

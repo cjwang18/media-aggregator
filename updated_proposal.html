@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<head>
+	<title>Five Development Elements</title>
+	<link rel="stylesheet" type="text/css" href="css/light.css"/>
+	<script language="javascript"><!--/*<body></body></html>*/--></script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="top-bar clearfix" id="top-bar">
+			<a class="link" id="qs-link" href="index.html">
+				<strong>Back to Aggregator</strong>
+			</a>
+			<span class="right">
+				<a class="link" href="about.html">About</a>
+				<a class="link" href="faq.html">FAQ</a>
+				<a class="link" href="favorites.html">
+					<strong>My Favs</strong>
+				</a>
+			</span>
+		</div>
+		<div class="main">
+			<header class="clearfix">
+				<h1>Five Development Elements<span>Updated Project Proposal</span></h1>
+			</header>
+			<div id="content">
+				<div class="section">
+					<h3>Overview</h3>
+					<br>
+					<p>
+						This website is a media aggregator site that aggregates photos from 500px and Wikipedia's photo of the day, music from Hype Machine, articles from Google News, videos from Vimeo and Youtube, food suggestions from Yelp, and the current weather condition, and places them into tiles on the page. The aggregator is heavily JS-dependent as all of its functionality is implemented with JavaScript and jQuery. 
+					</p>
+					<br>
+					<p>
+						In addition to the main aggregator page, there is a "My Favs" page which allows users to add their favorite tiles from the main aggregator by dragging and dropping to the top bar. The "My Favs" page allows users to remove tiles they no longer want. Additional pages include an "About" page that serves to explain how the main aggregator functionality works
+					</p>
+				</div>
+				<br>
+				<div class="section">
+					<h3>Major Routine - Main Aggregator Functionality</h3>
+					<br>
+					<p>
+						All of the main aggregator functionality is contained in the <strong>"js/aggregator.js"</strong> file.
+					</p>
+					<br>
+					<p>
+						Upon loading the aggregator page, the <strong>initializeAggregator()</strong> function that starts on line <strong>732</strong> is called. The function starts by configuring what sources the tiles are going to be aggregated from and how many from tiles from each source. To allow for customization, the number of tiles is indicated from the text fields under the Quick Settings, Show More Tiles option. This is facilitated by a <a href="http://www.timdown.co.uk/jshashtable/">hashtable</a>, which stores keys and their values. In the aggregator, the key corresponds to what source and the value is how many tiles to aggregate from that source. This will be collectively called the tileTypes hashtable. The function then calls the getLocation() function that is described below to geolocate the user's current latitude and longitude.
+					</p>
+					<br>
+					<p>
+						Once that's done, it calls the <strong>getAggregatorTiles()</strong> function that starts on line <strong>702</strong> and passes to it tileTypes. This function takes the hashtable and iterates through it, calling the <strong>getAggregatorTilesHelper()</strong> function, which starts on line <strong>612</strong>, for each tileType. The helper function receives the current tileType that the getAggregatorTiles() function was looping through and calls the source-specific get[SourceName]Tiles() function.
+					</p>
+					<br>
+					<p>
+						Below is a list of the source-specific get[SourceName]Tiles() function and their corresponding helper function, along with their starting line numbers. The helper function makes a request from the API and returns the data in JSON format back to the get[SourceName]Tiles() function via a callback. 
+						<br><br>
+						get500pxTiles() - 23 | five00pxAPI() - 6
+						<br>
+						getHypemTiles() - 69 | hypemAPI() - 51
+						<br>
+						getNewsTiles() - 142 | chooseTopic() - 97 | newsAPI() - 129
+						<br>
+						getVimeoTiles() - 249 | vimeoAPI() - 238
+						<br>
+						getWeatherTiles() - 349 | weatherAPI() - 327
+						<br>
+						getWikiTiles() - 406 | wikiAPI() - 388
+						<br>
+						getYelpTiles() - 500 | yelpAPI() - 442
+						<br>
+						getYoutubeTiles() - 553 | youtubeAPI() - 541
+						<br><br>
+						Each helper function returns the raw data in JSON format, which is passed via a callback to the get[SourceName]Tiles() functions. Each of those functions parse the data, take the array of entries and extract from each entry the needed elements to make a tile (image, title, link, and the logo is specific to which source it is), which is then used to create an array of tile objects. Because each of these functions receive a num_tiles parameter, we can randomly select how many tiles the user wants to see from each source. This is done with a call to the randomGetFromDataArray() function, which returns to us the final array of aggregated tile(s) from that particular source. This array is then passed via callback to the getAggregatorTilesHelper() function, which is passed via callback to the getAggregatorTiles() function. At this point, the tiles that have been passed back are added to an array of aggregator tiles that contains tiles from all the different sources. Once getAggregatorTilesHelper() has been called for each tileType and all the returned tiles are stored in the array, we make a final callback, passing the final array of tile objects that contains the aggregated tiles for display in the aggregator. After all those callbacks, we've now returned to where we started, in the initializeAggregator() function. We run randomGetFromDataArray() on the array of aggregated tiles once more to randomize the order of all the tiles. Once that's completed, we can then display the aggregated tiles, which is discussed in the Dynamic Layers section. 
+					</p>
+					<br>
+					<p>
+						For a more detailed and perhaps clearer description of how this works, please view the <a href="about.html">About</a> page. 
+					</p>
+				</div>
+				<br>
+				<div class="section">
+					<h3>Medium Routine - Adding/Removing Favorite Tiles</h3>
+					<br>
+					<p>
+						All of the JavaScript and jQuery functionality needed to implement the adding and removing of favorite tiles to and from a favorites page is located in <strong>"js/favorites.js"</strong>.
+					</p>
+					<br>
+					<p>
+						A tile is favorited when a user drags the tile from the aggregator page onto the "My Favs" link located on the top bar. The dragging action triggers the <strong>drag()</strong> function which starts on line <strong>5</strong>. This function takes in the dragged element as its "obj" parameter. Because I no longer have access to the original tile data, I have to reverse engineer it using jQuery's .children() method. The data is then concatenated into a string version of a JSON object representing the tile and its data, ready for transfer. 
+					</p>
+					<br>
+					<p>
+						Upon dropping the tile on the "My Favs" link on the top bar, the <strong>drop_add()</strong> function beginning on line <strong>28</strong> is triggered. The string data from the drag() function triggered by the drag event is then transferred. The string is then parsed into a JSON object and appended to a cookie. Finally, it calls <strong>favAddedConfirmation()</strong> (starting on line <strong>48</strong>) which is just a jQuery animation, sliding down a confirmation message to let the user know that the tile has been added to his/her favorites. 
+					</p>
+					<br>
+					<p>
+						When the user clicks the "My Favs" link, he/she is taken to the "favorites.html" page. After the page is done loading, it first checks to see if the cookie that stores all the favorite tiles exist or if it exists but there are no entries. If the latter is the case or the cookie doesn't exist, then the <strong>noFavs()</strong> function is called. Starting on line <strong>81</strong>, it just fades in a message letting the user know that he/she doesn't have any favorites.
+					</p>
+					<br>
+					<p>
+						But if the cookie exists and there are favorites, then the function <strong>showFavoriteTiles()</strong> that starts on line <strong>87</strong> is called and passed the JSON object containing all the data representing each favorite tile. This function parses through each entry and converts the data back to an array of tiles, which is then passed to the setAggregatorTiles() function. After the tiles have been set, the centerImages() routine is called to make the images fit inside the tiles.
+					</p>
+					<br>
+					<p>
+						Users can remove tiles from their favorites by dragging tiles to the "Delete" link, which only appears on the favorites page and replaces the "My Favs" link. The dragging event triggers the drag() function that was described above. Upon dropping the tile, the <strong>drop_del()</strong> function, which starts on line <strong>53</strong> is triggered. The string data transferred through the drop event is then parsed as a JSON object. Its link variable is compared to the link of every other favorite tile object stored in the cookie. Once there is a match (which there should be), that tile object in the cookie is removed and the page is reloaded to reflect the change. 
+					</p>
+				</div>
+				<br>
+				<div class="section">
+					<h3>Medium Routine - Misc. Aggregator Functionality</h3>
+					<br>
+					<p>
+						The <strong>randomGetFromDataArray()</strong> function that starts on line <strong>854</strong> inside the file <strong>"js/aggregator.js"</strong> returns an array that contains num (parameter) number of randomly selected tiles from the original array (parameter). The function starts by calculating a random number from 0 to the length of the input array. The function generates num number of subsequent random numbers from 0 to the length of the input array and adds them to an array of randomly generated numbers. This array is used to check if a randomly generated number has already been generated. This function prevents two of the same numbers, which eliminates duplicates. Once a unique array of random numbers has been generated, the function returns an array with the values from the original array indicated by the randomly generated indices. This function is used in the aggregator both to randomly select a smaller subset of all the tiles returned from an API as well as the generate the final order in which tiles will be displayed on the aggregator.
+					</p>
+					<br>
+					<p>
+						The <strong>isDaytime()</strong> function that starts on line <strong>9</strong> inside the file <strong>"js/datetime.js"</strong> returns a boolean indicating whether or not it is day or night at the location passed to it as a latlon parameter. It does this by getting the current date and time, converting to UTC time, and utilizing the <a href="http://prestonhunt.com/story/124">SunriseSunset</a> class to compare the current time to the sunrise and sunset time of a particular location. This function is used to switch between the day and night sets of weather icons and is also used to change the background gradient of the weather tile. 
+					</p>
+					<br>
+					<p>
+						The <strong>getLocation()</strong> function that starts on line <strong>597</strong> in the file <strong>"js/aggregator.js"</strong> performs geolocation from within the browser. Using the Google Maps API, it makes a call to get the current latitude and longitude of the user, which is then concatenated to a single string and stored as a global "latlon" variable. This variable is used as the basis for the weather and Yelp tiles. 
+					</p>
+					<br>
+					<p>
+						The following functions deal with geocoding and reverse geocoding. They are located in the file <strong>"js/quick-settings.js"</strong>. The getLocation() function calls the <strong>llToAddr()</strong> function that starts on line <strong>108</strong> to convert the latitude and longitude coordinates to a human-readable address. Utilizing the Google Maps API, the function returns a JSON object, which is then used to call the <strong>setLocationField()</strong> function that starts on line <strong>94</strong>. This function parses the returned JSON object which is received as its parameter. In this case of reverse geocoding (address lookup from latitude/longitude), it gets the city component of the address and stores it in a global variable. This global variable is used by the weather tile to indicate the location of the weather condition. The function also sets the full address it got from the JSON object into the input field inside the Quick Settings, Change Location option so users can see the accuracy of the geolocation.
+					</p>
+					<br>
+					<p>
+						The <strong>addrToLL()</strong> function that starts on line <strong>115</strong> handles geocoding (getting latitude/longitude coordinates from a human-typed address). The function is called when the user decides to manually input a location. It takes the contents of the input field and utilizes the Google Maps API to get the corresponding latitude/longitude coordinates. Those coordinates are saved into the global latlon variable for future use by the aggregator. In addition, it calls the setLocationField() function which gets the city component of the address and sets that to a global variable that will be used by the weather tile to indicate the location of the weather condition. 
+					</p>
+				</div>
+				<br>
+				<div class="section">
+					<h3>Dynamic Layers</h3>
+					<br>
+					<p>
+						The entire content section of the aggregator and favorites pages is a dynamic layer. Displaying the tiles is done by the <strong>setAggregatorTiles()</strong> function, which receives an array of tiles as its parameter. The function is located in <strong>"js/aggregator.js"</strong> and starts on line <strong>757</strong>. 
+					</p>
+					<br>
+					<p>
+						There are two cases to the operation of this function. The first of which is when there are no existing tiles in the content section. It takes each field of the tile object and dynamically creates the tile's elements: image, title and logo as part of the description overlay, and the link to the original source. It contains logic that analyzes which tile in the provided array it is currently building and ensures that there are exactly four tiles in a row. It also contains logic that changes the appearance of specific tiles. Weather tiles receive a different gradient treatment depending on whether it is day or night. Tiles that do not contain an image are assigned a different style and all other non-weather tiles are made draggable. Once the function has finished building all the tiles, it appends all that HTML into the content section. Finally, it removes the loading animation.
+					</p>
+					<br>
+					<p>
+						The second case of this function is when there are already existing tiles in the content section and we are just appending new tiles to the end. In this case, the function checks to see if the number of existing tiles form complete rows of four. If so it can append the tiles directly after having built them. But if the last row of tiles isn't complete, it will remove the last instance of "&lt;/ul&gt;" which is the closing tag of a row. Thus, any new tiles will be appended to form complete rows of four tiles. 
+					</p>
+					<br>
+					<p>
+						After all the tiles have been set, the <strong>centerImages()</strong> function is called, which scales down an image to completely fill the tile while preserving its original aspect ratio, and then centering it within the tile. This function is located in <strong>"js/aggregator.js"</strong> and starts on line <strong>817</strong>. 
+					</p>
+					<br>
+					<p>
+						This function is actually adapted from <a href="http://ericjuden.com/2009/07/jquery-image-resize/">Eric Juden's jQuery Image Resize</a>. I've modified it so that it will only scale the height of landscape photos and only the width of portrait or square photos. This is so that even a non-square image will completely fill the 200x200 area of a tile. The height is actually scaled less, to 270px to accommodate for Youtube and Vimeo images which will sometimes contain letterboxes. I've also added the functionality to center the scaled images within the 200x200 tile.
+					</p>
+				</div>
+				<br>
+				<div class="section">
+					<h3>Customization</h3>
+					<br>
+					<p>
+						The "Quick Settings" menu allows the user to customize the aggregator to his/her liking. All of the references I mention to code will be located in the file <strong>"js/quick-settings.js"</strong>.
+					</p>
+					<br>
+					<p>
+						The first customization is the theme of the aggregator. Users have the option to choose between dark and light themes, the latter of which is the default. Changing the theme is done by changing the CSS file, changing the logo icons, and setting the global theme variable to the new theme name. The theme name is also saved to a cookie so the next time the user visits the page, the saved theme will be automatically used. The <strong>changeTheme()</strong> function that accomplishes this starts on line <strong>65</strong>. 
+					</p>
+					<br>
+					<p>
+						Users can change their location by typing a new one into the input field. Once the user submits their new location, whatever they typed in is geocoded into latitude and longitude coordinates. The new coordinates are then used to get new tiles from the weather and Yelp sources, since those two are location-based. The jQuery that binds the submit button begins on line <strong>18</strong>. The rest of the functionality described above is done in the <strong>changeLocation()</strong> function, beginning on line <strong>129</strong> of the same file.
+					</p>
+					<br>
+					<p>
+						Users can customize different kinds of news topics by checking the different checkboxes for each of the topics available. If the user checks more than one box, the aggregator will return tile(s) for all of the selected topics. The jQuery that binds the "Load" button begins on line <strong>23</strong>. Once the user clicks that button, all of the checked topics are saved to a cookie and the aggregator is called to display the news tile(s) from each of the selected topics. The <strong>changeNewsTopics()</strong> function that does this begins on line <strong>145</strong>. The user can reset their customization of news topics by clicking the "Default" button, which deselects all the checkboxes and removes the saved topics from the cookie. The code that does this starts on line <strong>27</strong>. 
+					</p>
+					<br>
+					<p>
+						Users can customize the number of tiles that are shown for each source (except weather and Wikipedia's photo of the day). The jQuery that binds the button to change the preferences starts on line <strong>33</strong>. It calls a function that gets the user-edited values from the input fields, creates the variable that holds which source should be called by the aggregator and how many tiles it should get from each source, saves that information to a cookie, and finally calls the aggregator with the new preferences. The <strong>changeNumberOfTiles()</strong> function that accomplishes the above starts on line <strong>176</strong>. Users can revert to the default number of tiles for each source by clicking the "Default" button. This will also remove any preferences pertaining to number of tiles from the cookie. The code that does this starts on line <strong>37</strong>.
+					</p>
+					<br>
+					<p>
+						When a user revisits/refreshes/reloads a page, the first thing the page does is check if a cookie containing the user's customizations exists. If the theme cookie exists, it will change the theme of the page to the theme specified in the cookie. If there are saved news topics, those topics will be checked in their respective checkboxes. If the user customized the number of tiles to show from each source, the input fields will be modified to reflect the user's preferences. The <strong>initializeFromCookies()</strong> function that accomplishes the above starts on line <strong>211</strong>.
+					</p>
+				</div>
+			</div> <!-- end of #content div -->
+		</div>
+	</div>
+</body>
+</html>

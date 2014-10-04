@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>A Media Aggregator Experiment</title>
+	<link rel="stylesheet" type="text/css" href="css/light.css"/>
+	<script language="javascript"><!--/*<body></body></html>*/--></script>
+
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+	<script src="js/500px_api.js"></script>
+	<script src="js/datetime.js"></script>
+	<script src="js/jshashtable-2.1.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/oauth.js"></script>
+	<script src="js/sha1.js"></script>
+	<script src="js/aggregator.js"></script>
+	<script src="js/favorites.js"></script>
+	<script src="js/quick-settings.js"></script>
+
+	<script>
+		function setCurrentDate() {
+			var dateString = "";
+			var today = getToday();
+			var wd = today.getDay();
+			var m = today.getMonth();
+			dateString += weekday[wd] + ", " + months[m] + " " + today.getDate();
+			$("#date").html(dateString);
+		}
+
+		function checkLoad() {
+			if ($(".item").length < 1) {
+				$("#content").html("<center>Aggregator load error. Please reload and try again.</center>").fadeIn(2000);
+				$("#content").removeClass("loading");
+				//alert("Aggregator load error. Please reload and try again.");
+			}
+		}
+
+		$(document).ready(function() {
+
+			// Enable JSON in cookies
+			$.cookie.json = true;
+
+			// Initialize 500px API
+			_500px.init({
+				sdk_key: 'd9421d5247170acb2614275e24364082c32e88db'
+			});
+
+			setCurrentDate();
+
+			initializeFromCookies();
+
+			initializeAggregator();
+
+			setTimeout('checkLoad();', 10000);
+
+		});
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="top-bar clearfix" id="top-bar">
+			<a class="link" id="qs-link">
+				<strong>Quick Settings</strong>
+			</a>
+			<span class="right">
+				<a class="link" href="about.html">About</a>
+				<a class="link" href="faq.html">FAQ</a>
+				<a class="link" href="favorites.html" ondrop="drop_add(event);" ondragover="allowDrop(event);">
+					<strong>My Favs</strong>
+				</a>
+			</span>
+		</div>
+		<div class="favsMessage" id="favAdded">
+			Tile saved to favs
+		</div>
+		<div id="quick-settings">
+			<div id="settings">
+				<ul>
+					<li><a class="link">Change Theme</a></li>
+					<li><a class="link">Change Location</a></li>
+					<li><a class="link">Customize News Topics</a></li>
+					<li><a class="link">Show More Tiles</a></li>
+					<!-- <li><a class="link">Cookies</a></li> -->
+				</ul>
+			</div>
+			<div id="options">
+				<ul>
+					<li>
+						<a class="link" onclick="changeTheme('dark');">Dark Theme</a>
+						<br>
+						<a class="link" onclick="changeTheme('light');">Light Theme</a>
+					</li>
+					<li>
+						Enter New Location<br>
+						<input type="text" class="textField" id="inputLocation" size="25">
+						<input type="button" class="button" id="getNewLoc" value="Go">
+					</li>
+					<li>
+						<form id="customizeNewsTopics">
+							<div class="cb">
+
+								<input type="checkbox" name="topic" id="top" value="top">
+								<label for="top"></label>
+								&emsp;&emsp;&emsp;Top Stories
+							</div>
+							<div class="cb">
+								<input type="checkbox" name="topic" id="world" value="world">
+								<label for="world"></label>
+								&emsp;&emsp;&emsp;World
+							</div>
+							<div class="cb">
+								<input type="checkbox" name="topic" id="us" value="us">
+								<label for="us"></label>
+								&emsp;&emsp;&emsp;U.S.
+							</div>
+							<div class="cb">
+								<input type="checkbox" name="topic" id="business" value="business">
+								<label for="business"></label>
+								&emsp;&emsp;&emsp;Business
+							</div>
+							<div class="cb">
+								<input type="checkbox" name="topic" id="tech" value="technology">
+								<label for="tech"></label>
+								&emsp;&emsp;&emsp;Technology
+							</div>
+							<div class="cb">
+								<input type="checkbox" name="topic" id="ent" value="entertainment">
+								<label for="ent"></label>
+								&emsp;&emsp;&emsp;Entertainment
+							</div>
+							<div class="cb">
+								<input type="checkbox" name="topic" id="sports" value="sports">
+								<label for="sports"></label>
+								&emsp;&emsp;&emsp;Sports
+							</div>
+							<div class="cb">
+								<input type="checkbox" name="topic" id="health" value="health">
+								<label for="health"></label>
+								&emsp;&emsp;&emsp;Health
+							</div>
+							<input type="button" class="button" id="loadNews" value="Load">
+							<input type="reset" class="button" id="defaultNewsTopics" value="Default">
+						</form>
+					</li>
+					<li>
+						<form id="customizeNumTiles">
+							<img src="images/logos/500px_light.png" class="logo">
+							<input type="text" class="textField" name="500px" size="1" maxlength="2" value="1">
+							<br>
+							<img src="images/logos/hypem_light.png" class="logo">
+							<input type="text" class="textField" name="hypem" size="1" maxlength="2" value="1">
+							<br>
+							<img src="images/logos/news_light.png" class="logo">
+							<input type="text" class="textField" name="news" size="1" maxlength="2" value="1">
+							<br>
+							<img src="images/logos/vimeo_light.png" class="logo">
+							<input type="text" class="textField" name="vimeo" size="1" maxlength="2" value="1">
+							<br>
+							<img src="images/logos/yelp_light.png" class="logo">
+							<input type="text" class="textField" name="yelp" size="1" maxlength="2" value="1">
+							<br>
+							<img src="images/logos/youtube_light.png" class="logo">
+							<input type="text" class="textField" name="youtube" size="1" maxlength="2" value="1">
+							<br>
+							<input type="button" class="button" id="changeNumTiles" value="Change">
+							<input type="button" class="button" id="defaultNumTiles" value="Default">
+						</form>
+					</li>
+					<!-- <li>
+						debugging purposes only<br>
+						<input type="button" class="button" id="showAllCookies" value="Show All">
+						<br>
+						<input type="button" class="button" id="removeAllCookies" value="Remove All">
+					</li> -->
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<header class="clearfix">
+				<h1>A media aggregator experiment<span id="date"></span></h1>
+			</header>
+			<div class="loading" id="content">
+				<!-- <ul class="row-container">
+					<li draggable='true' ondragstart='drag(event, this);'>
+						<a target="_blank" href="#">
+							<div class="item" style='background-color: #eee; border: 1px dashed #ccc;'>
+								<span>
+									<img src="images/no_image_available.png" style="width: 200px; height: 200px; margin-top: 0px;">
+								</span>
+								<div class="description">
+									<br><br><br>
+									<img class="logo" src="images/logos/news_light.png">
+									<h3>Tile Title</h3>
+								</div>
+							</div>
+						</a>
+					</li>
+				</ul> -->
+			</div>
+		</div> <!-- end of "main" -->
+	</div> <!-- end of "container" -->
+</body>
+</html>

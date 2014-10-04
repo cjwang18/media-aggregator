@@ -1,0 +1,130 @@
+<html> 
+<head>
+<title>Weather Example</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+<script src="../js/jshashtable-2.1.js"></script>
+<script>
+
+var wCodes = new Hashtable();
+wCodes.put(395, "dunno");
+wCodes.put(392, "dunno");
+wCodes.put(389, "tstorm3");
+wCodes.put(386, "tstorm2");
+wCodes.put(377, "hail");
+wCodes.put(374, "hail");
+wCodes.put(371, "snow4")
+wCodes.put(368, "snow3")
+wCodes.put(365, "sleet")
+wCodes.put(362, "sleet");
+wCodes.put(359, "shower3")
+wCodes.put(356, "shower2")
+wCodes.put(353, "shower1");
+wCodes.put(350, "sleet");
+wCodes.put(338, "snow5");
+wCodes.put(335, "snow5");
+wCodes.put(332, "snow4");
+wCodes.put(329, "snow3");
+wCodes.put(326, "snow2");
+wCodes.put(323, "snow1");
+wCodes.put(320, "sleet");
+wCodes.put(317, "sleet");
+wCodes.put(314, "shower3");
+wCodes.put(311, "light_rain");
+wCodes.put(308, "shower3");
+wCodes.put(305, "shower3");
+wCodes.put(302, "shower2");
+wCodes.put(299, "shower2");
+wCodes.put(296, "light_rain");
+wCodes.put(293, "light_rain");
+wCodes.put(284, "shower1");
+wCodes.put(281, "shower1");
+wCodes.put(266, "shower1");
+wCodes.put(263, "shower1");
+wCodes.put(260, "fog");
+wCodes.put(248, "fog");
+wCodes.put(230, "snow5");
+wCodes.put(227, "snow5");
+wCodes.put(200, "tstorm1");
+wCodes.put(185, "shower1");
+wCodes.put(182, "sleet");
+wCodes.put(179, "snow1");
+wCodes.put(176, "shower1");
+wCodes.put(143, "mist");
+wCodes.put(122, "overcast");
+wCodes.put(119, "cloudy5");
+wCodes.put(116, "cloudy2");
+wCodes.put(113, "clear");
+
+function getLocation(callback) {
+	var useGeolocation = true;
+	if(navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var lat = position.coords.latitude;
+			var lon = position.coords.longitude;
+			var latlon = lat + "," + lon;
+			callback(latlon);
+		});
+	}
+}
+
+function weatherAPI(latlon, callback) {
+	var requestURL = "http://api.worldweatheronline.com/free/v1/weather.ashx?"
+	requestURL += "key=rjshwkprfangr3zp95hdupcb";
+	requestURL += "&q=" + latlon;
+	requestURL += "&num_of_days=1&format=json";
+
+	// $.getJSON(requestURL, function(returndata) {
+	// 	callback(returndata);
+	// })
+
+	$.ajax({
+		'url': requestURL,
+		'cache': true,
+		'dataType': 'jsonp',
+		'jsonpCallback': 'cb',
+		'success': function(data, textStats, XMLHttpRequest) {
+			callback(data);
+		}
+	});
+}
+
+function getWeatherTiles(num_tiles, callback) {
+
+	getLocation(function(latlon) {
+		weatherAPI(latlon, function(apiData) {
+			console.log(apiData);
+			var output = prettyPrint(apiData);
+
+			var currCond = apiData.data.current_condition[0];
+
+			var wCode = currCond.weatherCode;
+			var img = wCodes.get(parseFloat(wCode));
+			var t = currCond.weatherIconUrl[0].value;
+			if (t.indexOf("night") != -1) {
+				img += "_night";
+			}
+			img += ".png";
+
+			var tempF = currCond.temp_F;
+			var wDesc = currCond.weatherDesc[0].value;
+
+			var string = "<img src='../images/weather/" + img + "'>" + tempF + "&deg;F";
+			$("body").append(string);
+			$("body").append(output);
+		});
+	});
+}
+
+$(document).ready(function() {
+	getWeatherTiles(1, function() {
+
+	});
+});
+</script>
+</head>
+<body>
+
+</body>
+</html>

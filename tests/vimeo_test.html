@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vimeo test</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+	<script>
+		// http://developer.vimeo.com/apis/simple#video-response
+		$(document).ready(function() {
+			var vimeoAPI = "http://vimeo.com/api/v2/channel/staffpicks/videos.json?callback=?";
+			$.getJSON(vimeoAPI, {format: "json"}, function(videos) {
+				var string = "There are " + videos.length + " videos.<br>";
+				for (i=0 ; i<videos.length ; i++) {
+					string += '<img src="' + videos[i].thumbnail_large + '"><br>';
+				}
+				var output = prettyPrint(videos);
+				$("#container").append(output);
+				$("#container").append(string);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+	</div>
+</body>
+</html>

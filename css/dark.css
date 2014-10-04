@@ -1,0 +1,232 @@
+@import url('style.css');
+
+body {
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	background: #0e0e0e;
+	font-weight: 300;
+	font-size: 15px;
+	color: #ddd;
+	-webkit-font-smoothing: antialiased;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.main {
+	padding: 30px 20px 100px 20px;
+	//max-width: 1580px;
+	width: 960px;
+	margin: 0 auto;
+	background-color: #0e0e0e;
+}
+
+.main > header h1 {
+	font-size: 34px;
+	line-height: 38px;
+	margin: 0;
+	font-weight: 700;
+	color: #ddd;
+	float: left;
+}
+
+/* Header Style - Dark */
+.top-bar {
+	line-height: 24px;
+	font-size: 11px;
+	background: #0e0e0e;
+	text-transform: uppercase;
+	z-index: 9999;
+	position: relative;
+	box-shadow: 1px 0px 2px rgba(255,255,255,0.8);
+}
+
+.top-bar a {
+	padding: 0px 10px;
+	letter-spacing: 1px;
+	color: #ddd;
+	text-shadow: 0 -1px 0 #0e0e0e;
+	display: inline-block;
+}
+
+.top-bar a:hover {
+	background: rgba(0,0,0,0.8);
+	color: #fff;
+}
+
+.favsMessage {
+	position: absolute;
+	right: 0;
+	z-index: 10;
+
+	background: rgba(0, 0, 0, 0.9);
+	box-shadow: 0px 2px 2px rgba(255,255,255,0.8);
+	color: #fff;
+	font-size: 11px;
+	line-height: 24px;
+	text-transform: uppercase;
+	padding: 0px 10px;
+	letter-spacing: 1px;
+}
+
+/* Quick Settings - Dark */
+#quick-settings {
+	width: 400px;
+	position: absolute;
+	z-index: 10;
+
+	/*background-color: #eee;*/
+	background: rgba(0, 0, 0, 0.9);
+	box-shadow: 0px 2px 2px rgba(255,255,255,0.8);
+	color: #fff;
+	font-size: 11px;
+	line-height: 24px;
+	text-transform: uppercase;
+	padding: 0px 10px;
+	letter-spacing: 1px;
+}
+
+.link {
+	cursor: pointer;
+	text-decoration: none;
+	color: #ddd;
+}
+
+/* Checkbox for Dark Theme */
+.cb label {
+	cursor: pointer;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: 0;
+	border-radius: 0px; /* was 4px */
+
+	-webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+	-moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+	box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+	background: #fcfff4;
+
+	background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+}
+
+.cb label:after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	opacity: 0;
+	content: '';
+	position: absolute;
+	width: 9px;
+	height: 5px;
+	background: transparent;
+	top: 4px;
+	left: 4px;
+	border: 3px solid #333;
+	border-top: none;
+	border-right: none;
+
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+.cb label:hover::after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	filter: alpha(opacity=30);
+	opacity: 0.5;
+}
+
+.cb input[type=checkbox]:checked + label:after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	filter: alpha(opacity=100);
+	opacity: 1;
+}
+
+/* Button for Dark Theme */
+.button {
+	display: block;
+	float: right;
+	clear: left;
+	margin: 5px;
+	margin-bottom: 10px;
+	padding: 5px 10px;
+	-webkit-border-radius: 2px 2px;
+	border: solid 1px #dadada;
+	background: #f4f4f4; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f4f4f4 0%, #f1f1f1 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4f4f4), color-stop(100%,#f1f1f1)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f4f4f4 0%,#f1f1f1 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f4f4f4 0%,#f1f1f1 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f4f4f4 0%,#f1f1f1 100%); /* IE10+ */
+	background: linear-gradient(top,  #f4f4f4 0%,#f1f1f1 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#f1f1f1',GradientType=0 ); /* IE6-9 */
+	color: #333;
+	text-decoration: none;
+	cursor: pointer;
+	text-align: center;
+	font-weight: bold;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	text-shadow: 0px 1px 1px rgba(255,255,255,1);
+	line-height: 1;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.button:hover {
+	border: 1px solid #aaa;
+	background: background: #f8f8f8; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f8f8f8 0%, #f1f1f1 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#f1f1f1)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f8f8f8 0%,#f1f1f1 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f8f8f8 0%,#f1f1f1 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f8f8f8 0%,#f1f1f1 100%); /* IE10+ */
+	background: linear-gradient(top,  #f8f8f8 0%,#f1f1f1 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#f1f1f1',GradientType=0 ); /* IE6-9 */
+	color: #000;
+	-webkit-box-shadow: 0px 1px 1px 0px rgba(170, 170, 170, 0.9);
+	-moz-box-shadow: 0px 1px 1px 0px rgba(170, 170, 170, 0.9);
+	box-shadow: 0px 1px 1px 0px rgba(170, 170, 170, 0.9);
+}
+
+.button:active {
+	border: 1px solid #aaa;
+	color: #000;
+	-webkit-box-shadow: inset 0 0 2px 4px #f1f1f1, 0 1px 0 0 #eeeeee;
+	-moz-box-shadow: inset 0 0 2px 4px #f1f1f1, 0 1px 0 0 #eeeeee;
+	box-shadow: inset 0 0 2px 4px #f1f1f1, 0 1px 0 0 #eeeeee;
+}
+
+/* Aggregator Style - Dark */
+.loading {
+	background: transparent url(../images/loader_dark.gif) no-repeat center center;
+}
+
+.description {
+	/*background: #fff;*/
+	background: rgba(0, 0, 0, 0.75);
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	bottom: 10px;
+	right: 10px;
+	text-align: center;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	opacity: 0;
+	-webkit-transition: opacity 0.4s ease-in-out;
+	-moz-transition: opacity 0.4s ease-in-out;
+	-ms-transition: opacity 0.4s ease-in-out;
+	-o-transition: opacity 0.4s ease-in-out;
+	transition: opacity 0.4s ease-in-out;
+	overflow: hidden;
+}
+
+.description h3 {
+	color: #ddd;
+	text-decoration: none;
+}

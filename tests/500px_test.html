@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>500px test</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="../js/500px_api.js"></script>
+	<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+	<script>
+		$(document).ready(function() {
+			_500px.init({
+				sdk_key: 'd9421d5247170acb2614275e24364082c32e88db'
+			});
+
+			_500px.api('/photos', {feature: 'popular', page: 1, image_size: 3}, function (response) {
+				if (response.success) {
+					var photos = response.data.photos;
+					var string = "There are " + photos.length + " photos.<br>";
+					for (i=0 ; i<photos.length ; i++) {
+						string += '<img src="' + photos[i].image_url + '"><br>';
+					}
+					var output = prettyPrint(response.data);
+					$("#container").append(output);
+					$("#container").append(string);
+				} else {
+					alert('Unable to complete request: ' + response.status + ' - ' + response.error_message);
+				}
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+	</div>
+</body>
+</html>

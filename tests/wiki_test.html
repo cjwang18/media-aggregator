@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>wiki test</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+	<script>
+		// JSON for featured article: https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&q=http%3A%2F%2Fen.wikipedia.org%2Fw%2Fapi.php%3Faction%3Dfeaturedfeed%26format%3Djson%26feedformat%3Drss%26feed%3Dfeatured
+		// JSON for potd: https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&q=http%3A%2F%2Fen.wikipedia.org%2Fw%2Fapi.php%3Faction%3Dfeaturedfeed%26format%3Djson%26feedformat%3Drss%26feed%3Dpotd
+		$(document).ready(function() {
+			var query = "http%3A%2F%2Fen.wikipedia.org%2Fw%2Fapi.php%3Faction%3Dfeaturedfeed%26format%3Djson%26feedformat%3Drss%26feed%3Dpotd";
+			var num = "-1";
+			var feedAPI = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=" + num + "&q=" + query + "&callback=?";
+
+			$.getJSON(feedAPI, function(data) {
+				var feed = data.responseData.feed;
+				var entries = feed.entries || [];
+				//alert("there are " + entries.length + " entries.");
+				var string = "There are " + entries.length + " entries.<br><br>";
+				for (i=0 ; i<entries.length ; i++) {
+					var entry = entries[i];
+					var snippet = entry.contentSnippet;
+					var link = entry.link;
+
+					var temp = entry.content;
+					var altIndex = temp.indexOf('img alt="') + 9;
+					var altEndIndex = temp.indexOf('"', altIndex);
+					var title = temp.substring(altIndex, altEndIndex);
+					var srcIndex = temp.indexOf('src="', altEndIndex) + 5;
+					var srcEndIndex = temp.indexOf('"', srcIndex);
+					var img = "http://" + temp.substring(srcIndex, srcEndIndex);
+
+					string += "<img src='" + img + "'><a href='" + link + "'>" + title + "</a><br>";
+				}
+
+				var output = prettyPrint(data);
+				$("#container").append(output);
+				$("#container").append(string);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+	</div>
+</body>
+</html>

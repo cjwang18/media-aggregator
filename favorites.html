@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>A Media Aggregator Experiment</title>
+	<link rel="stylesheet" type="text/css" href="css/light.css"/>
+	<script language="javascript"><!--/*<body></body></html>*/--></script>
+
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/jshashtable-2.1.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/aggregator.js"></script>
+	<script src="js/favorites.js"></script>
+	<script src="js/quick-settings.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+
+			// Enable JSON in cookies
+			$.cookie.json = true;
+
+			initializeFromCookies();
+
+			if ($.cookie("favTiles")) {
+				var favs = $.cookie("favTiles").favs;
+				if (favs.length > 0) {
+					showFavoriteTiles(favs);
+				} else {
+					noFavs();
+				}
+			} else {
+				noFavs();
+			}
+
+		});
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="top-bar clearfix" id="top-bar">
+			<a class="link" href="index.html">
+				<strong>Back to Aggregator</strong>
+			</a>
+			<span class="right">
+				<a class="link" href="about.html">About</a>
+				<a class="link" href="faq.html">FAQ</a>
+				<a class="link" ondrop="drop_del(event);" ondragover="allowDrop(event);">
+					<strong>Delete</strong>
+				</a>
+			</span>
+		</div>
+		<div class="main">
+			<header class="clearfix">
+				<h1>Favorites<span id="subhead"></span></h1>
+			</header>
+			<div id="content"></div>
+		</div>
+	</div>
+</body>
+</html>

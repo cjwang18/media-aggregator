@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>news test</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script>
+		// top stories: 	http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss
+		// world: 			http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=w&output=rss
+		// US: 				http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=n&output=rss
+		// business: 		http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=b&output=rss
+		// technology: 		http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=tc&output=rss
+		// entertainment: 	http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=e&output=rss
+		// sports: 			http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=s&output=rss
+		// health: 			http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=m&output=rss
+		$(document).ready(function() {
+			//var url = "http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss";
+			//var query = "";
+			var num = "-1";
+			//var feedAPI = "";
+			var newsHTML = "";
+
+			function chooseTopic(topic, url) {
+				switch(topic) {
+					case 'world':
+						url += "&topic=w";
+						break;
+					case 'us':
+						url += "&topic=n";
+						break;
+					case 'business':
+						url += "&topic=b";
+						break;
+					case 'technology':
+						url += "&topic=tc";
+						break;
+					case 'entertainment':
+						url += "&topic=e";
+						break;
+					case 'sports':
+						url += "&topic=s";
+						break;
+					case 'health':
+						url += "&topic=m";
+						break;
+					default:
+						url += "";
+						break;
+				}
+				query = encodeURIComponent(url);
+				feedAPI = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=" + num + "&q=" + query + "&callback=?";
+				return feedAPI;
+			}
+
+			function parseNews(feedAPI) {
+				$.getJSON(feedAPI, function(data) {
+					var feed = data.responseData.feed;
+					var entries = feed.entries || [];
+					//alert("there are " + entries.length + " entries.");
+					newsHTML += "<br><b>There are " + entries.length + " \"" + feed.title + "\" entries.</b><br><br>";
+					for (i=0 ; i<entries.length ; i++) {
+					 	var entry = entries[i];
+
+					 	temp = entry.content;
+						srcIndex = temp.indexOf('img src="') + 9;
+						srcEndIndex = temp.indexOf('"', srcIndex);
+						img = "http:" + temp.substring(srcIndex, srcEndIndex);
+						img_big = img.replace("6.jpg", "11.jpg");
+
+					 	var title = entry.title;
+					 	newsHTML += title + "<img src='" + img_big + "'><br><br>";
+					}
+					$("#news").html(newsHTML);
+				});
+			}
+
+			function getNews() {
+				// for one news topic selection
+				// url = "http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss";
+				// topic = $("input[type='checkbox']:checked").attr("value");
+				// chooseTopic(topic, url);
+				// parseNews(feedAPI);
+
+				// for multiple topics selected
+				newsHTML = "";
+				$("input[type='checkbox']:checked").each(function() {
+					url = "http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss";
+					topic = $(this).attr("value");
+					chooseTopic(topic, url);
+					parseNews(feedAPI);
+				});
+
+			}
+
+			$("input[type='button']").bind("click", function() {
+				getNews();
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+		<div id="topics">
+			<form>
+				<input type="checkbox" name="topic" value="top">Top Stories<br>
+				<input type="checkbox" name="topic" value="world">World<br>
+				<input type="checkbox" name="topic" value="us">U.S.<br>
+				<input type="checkbox" name="topic" value="business">Business<br>
+				<input type="checkbox" name="topic" value="technology">Technology<br>
+				<input type="checkbox" name="topic" value="entertainment">Entertainment<br>
+				<input type="checkbox" name="topic" value="sports">Sports<br>
+				<input type="checkbox" name="topic" value="health">Health<br>
+				<input type="button" name="loadNews" value="Load News">
+			</form>
+		</div>
+		<div id="news">
+		</div>
+	</div>
+</body>
+</html>

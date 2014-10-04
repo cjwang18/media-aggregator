@@ -1,0 +1,110 @@
+<html> 
+<head>
+<title>Yelp Search Example</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+<script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+<script>
+var latlon = "";
+
+function getLatLon() {
+	if(navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var lat = position.coords.latitude;
+			var lon = position.coords.longitude;
+			latlon = lat + "," + lon;
+			//alert("latlon inside function: " + latlon);
+			callAPI();
+		});
+	}
+}
+
+$(document).ready(function() {
+	getLatLon();
+});
+
+function callAPI() {
+	var auth = {
+		//
+		// Update with your auth tokens.
+		//
+		consumerKey: "qLcIsB6uSah5CVP73w4jiQ",
+		consumerSecret: "ZtfIjQamK9yelcc5dlRtGvpOI5I",
+		accessToken: "macajobSZHO5ypHoE-A3pd-flhCRyiww",
+		// This example is a proof of concept, for how to use the Yelp v2 API with javascript.
+		// You wouldn't actually want to expose your access token secret like this in a real application.
+		accessTokenSecret: "CoFrXG3GNfaiBt6B3SsNbYFnTN4",
+		serviceProvider: {
+			signatureMethod: "HMAC-SHA1"
+		}
+	};
+
+	var terms = 'food';
+
+	var near = latlon;
+	//var near = '34.0302636,-118.2890863';
+	// http://www.yelp.com/developers/documentation/v2/search_api#searchGC
+
+	var accessor = {
+		consumerSecret: auth.consumerSecret,
+		tokenSecret: auth.accessTokenSecret
+	};
+
+	parameters = [];
+	parameters.push(['term', terms]);
+	parameters.push(['ll', near]);
+	parameters.push(['callback', 'cb']);
+	parameters.push(['oauth_consumer_key', auth.consumerKey]);
+	parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
+	parameters.push(['oauth_token', auth.accessToken]);
+	parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+
+	var message = {
+		'action': 'http://api.yelp.com/v2/search',
+		'method': 'GET',
+		'parameters': parameters
+	};
+
+	OAuth.setTimestampAndNonce(message);
+	OAuth.SignatureMethod.sign(message, accessor);
+
+	var parameterMap = OAuth.getParameterMap(message.parameters);
+	parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature)
+	console.log(parameterMap);
+
+	$.ajax({
+		'url': message.action,
+		'data': parameterMap,
+		'cache': true,
+		'dataType': 'jsonp',
+		'jsonpCallback': 'cb',
+		'success': function(data, textStats, XMLHttpRequest) {
+			console.log(data);
+			var output = prettyPrint(data);
+			$("body").append(output);
+			parseData(data);
+		}
+	});
+}
+
+function parseData(data) {
+	var string = "there are " + data.businesses.length + " results:<br><br>";
+	//alert(string);
+	for (i=0 ; i<data.businesses.length ; i++) {
+		var business = data.businesses[i];
+		var name = business.name;
+		var img = business.image_url;
+		var img_big = img.replace("ms.jpg", "ls.jpg");
+		var link = business.url;
+		string += "<img src='" + img_big + "'><a href='" + link + "'>" + name + "</a><br>";
+	}
+	$("body").append(string);
+}
+</script>
+</head>
+<body>
+
+</body>
+</html>

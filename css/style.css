@@ -1,0 +1,290 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+
+/* Entypo Icon Font */
+@font-face {
+  font-family: 'entypo-selected';
+  src: url("../font/entypo-selected.eot");
+  src:
+	  url("../font/entypo-selected.eot?#iefix") format('embedded-opentype'),
+	  url("../font/entypo-selected.woff") format('woff'),
+	  url("../font/entypo-selected.ttf") format('truetype'),
+	  url("../font/entypo-selected.svg#entypo-selected") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Theme-Independent Styles */
+html { height: 100%; }
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.container {
+	width: 100%;
+	position: relative;
+}
+
+.main > header {
+	//padding: 0 10px 30px;
+	padding: 0 0px 30px;
+}
+
+.main > header h1 span {
+	display: block;
+	font-size: 20px;
+	font-weight: 300;
+}
+
+.main h2 {
+	font-size: 38px;
+	font-weight: 300;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+	padding: 10px 0 0 0;
+	margin-bottom: 20px;
+	border-top: 1px solid #f7f7f7;
+}
+
+/* Header Style - Theme Independent */
+.top-bar span.right {
+	float: right;
+}
+
+.top-bar span.right a {
+	float: left;
+	display: block;
+}
+
+/* Quick Settings - Theme Independent */
+#quick-settings li {
+	list-style-type: none;
+}
+
+#settings {
+	width: 190px;
+	float: left;
+}
+
+#options {
+	width: 190px;
+	float: left;
+	/*display: none;*/
+}
+
+.textField {
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+
+#customizeNewsTopics .cb {
+	display: block;
+	float: left;
+	clear: both;
+}
+
+.logo {
+	width: 32px;
+	height: 32px;
+}
+
+#customizeNumTiles img {
+	display: block;
+	float: left;
+	clear: both;
+	margin-top: 5px;
+}
+
+#customizeNumTiles input[type=text] {
+	display: block;
+	float: left;
+	width: 32px;
+	height: 32px;
+	margin: 5px;
+	line-height: 32px;
+	text-align: center;
+	font-weight: 300;
+	font-size: 12px;
+}
+
+/* Checkbox - Theme Independent */
+input[type=checkbox] {
+	visibility: hidden;
+}
+
+.cb {
+	//width: 20px;
+	margin: 5px 0;
+	position: relative;
+}
+
+/* Aggregator Style - Theme Independent */
+#content {
+	margin: 0 auto;
+	min-width: 960px;
+	min-height: 415px;
+	/*background-color: #eee;*/
+}
+
+.row-container {
+	min-height: 200px;
+	list-style-type: none;
+	padding: 0;
+	margin: 0 auto;
+	width: 832px;
+	position: relative;
+}
+
+/* http://nicolasgallagher.com/micro-clearfix-hack/ */
+.row-container:before,
+.row-container:after {
+	content: " ";
+	display: table;
+}
+
+.row-container:after {
+	clear: both;
+}
+
+.row-container li {
+	display: block;
+	position: relative;
+	cursor: pointer;
+	float: left;
+	padding: 4px;
+}
+
+.item {
+	overflow: hidden;
+	width: 200px;
+	height: 200px;
+	text-align: center;
+}
+
+.item > span {
+	display: block;
+	width: 1000px;
+	margin-left: -400px; /* -(width-container width)/2 */
+}
+
+.item > span > img {
+	display: inline-block;
+}
+
+/* For FAQ page */
+.item > span > h3 {
+	display: inline-block;
+	width: 200px;
+	height: 200px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px;
+	color: #333;
+}
+
+.row-container li:hover .description {
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+	filter: alpha(opacity=80);
+	opacity: 1;
+}
+
+.dayWeatherTile {
+	background: rgb(138,187,215); /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(138,187,215,1) 0%, rgba(6,109,171,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(138,187,215,1)), color-stop(100%,rgba(6,109,171,1))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(138,187,215,1) 0%,rgba(6,109,171,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  rgba(138,187,215,1) 0%,rgba(6,109,171,1) 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  rgba(138,187,215,1) 0%,rgba(6,109,171,1) 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  rgba(138,187,215,1) 0%,rgba(6,109,171,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8abbd7', endColorstr='#066dab',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.dayWeatherTile2 {
+	background: rgb(178,225,255); /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(178,225,255,1) 0%, rgba(102,182,252,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(178,225,255,1)), color-stop(100%,rgba(102,182,252,1))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(178,225,255,1) 0%,rgba(102,182,252,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  rgba(178,225,255,1) 0%,rgba(102,182,252,1) 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  rgba(178,225,255,1) 0%,rgba(102,182,252,1) 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  rgba(178,225,255,1) 0%,rgba(102,182,252,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b2e1ff', endColorstr='#66b6fc',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.dayWeatherTile3 {
+	background: rgb(182,212,230); /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(182,212,230,1) 0%, rgba(52,173,248,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(182,212,230,1)), color-stop(100%,rgba(52,173,248,1))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(182,212,230,1) 0%,rgba(52,173,248,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  rgba(182,212,230,1) 0%,rgba(52,173,248,1) 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  rgba(182,212,230,1) 0%,rgba(52,173,248,1) 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  rgba(182,212,230,1) 0%,rgba(52,173,248,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b6d4e6', endColorstr='#34adf8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.dayWeatherTile4 {
+	background: rgb(189,210,223); /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(189,210,223,1) 0%, rgba(82,166,218,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(189,210,223,1)), color-stop(100%,rgba(82,166,218,1))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(189,210,223,1) 0%,rgba(82,166,218,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  rgba(189,210,223,1) 0%,rgba(82,166,218,1) 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  rgba(189,210,223,1) 0%,rgba(82,166,218,1) 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  rgba(189,210,223,1) 0%,rgba(82,166,218,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bdd2df', endColorstr='#52a6da',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.nightWeatherTile {
+	background: #250075; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #250075 0%, #000000 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#250075), color-stop(100%,#000000)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  #250075 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  #250075 0%,#000000 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  #250075 0%,#000000 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  #250075 0%,#000000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#250075', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.nightWeatherTile2 {
+	background: #250075; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #250075 0%, #060019 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#250075), color-stop(100%,#060019)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  #250075 0%,#060019 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  #250075 0%,#060019 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  #250075 0%,#060019 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  #250075 0%,#060019 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#250075', endColorstr='#060019',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.nightWeatherTile3 {
+	background: #291b5b; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #291b5b 0%, #080614 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#291b5b), color-stop(100%,#080614)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  #291b5b 0%,#080614 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  #291b5b 0%,#080614 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  #291b5b 0%,#080614 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  #291b5b 0%,#080614 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#291b5b', endColorstr='#080614',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.nightWeatherTile4 {
+	background: #231561; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #231561 0%, #050416 96%, #000000 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#231561), color-stop(96%,#050416), color-stop(100%,#000000)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  #231561 0%,#050416 96%,#000000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  #231561 0%,#050416 96%,#000000 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  #231561 0%,#050416 96%,#000000 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  #231561 0%,#050416 96%,#000000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#231561', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}

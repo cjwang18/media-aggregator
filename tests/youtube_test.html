@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>youtube test</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+	<script>
+		// the different feeds: https://developers.google.com/youtube/2.0/developers_guide_protocol_video_feeds#Video_responses_feed
+		$(document).ready(function() {
+			var feedID = "recently_featured";
+			var youtubeAPI = "https://gdata.youtube.com/feeds/api/standardfeeds/" + feedID + "?alt=json";
+			$.getJSON(youtubeAPI, function(data) {
+				var feed = data.feed;
+				var entries = feed.entry || [];
+				//alert("there are " + entries.length + " videos.");
+				var string = "There are " + entries.length + " videos.<br>";
+				for (i=0 ; i<entries.length ; i++) {
+					var entry = entries[i];
+					var title = entry.title.$t;
+					var thumb = entry.media$group.media$thumbnail[0].url;
+					string += title + '<img src="' + thumb + '"><br>';
+				}
+
+				var output = prettyPrint(data);
+				$("#container").append(output);
+				$("#container").append(string);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+	</div>
+</body>
+</html>

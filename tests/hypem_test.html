@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>hypem test</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+	<script>
+		$(document).ready(function() {
+			var hypemAPI = "http://hypem.com/playlist/popular/3day/json/1/data.js";
+			$.getJSON(hypemAPI, function(row) {
+				var items = [];
+				$.each(row, function(key, val) {
+					if (!isNaN(key)) {
+						items.push('<li>' + key + ' : ' + val.artist + ' - ' + val.title + '<img src="' + val.thumb_url_large + '">' + '</li>');
+					}
+				});
+
+				var output = prettyPrint(row);
+				$("body").append(output);
+
+				$('<ul/>', {
+					'class': 'my-new-list',
+					html: items.join('')
+					}).appendTo('body');
+			});
+		});
+	</script>
+</head>
+
+<body>
+</body>
+</html>

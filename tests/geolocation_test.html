@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Geolocation Test</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+	<!--
+	Include the maps javascript with sensor=true because this code is using a
+	sensor (a GPS locator) to determine the user's location.
+	See: https://developers.google.com/apis/maps/documentation/javascript/basics#SpecifyingSensor
+	-->
+	<script src="http://webdev.usc.edu/jquery.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
+	<script>
+		function getLocation() {
+			// Try HTML5 geolocation
+			if(navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					var lat = position.coords.latitude;
+					var lon = position.coords.longitude;
+					var latlon = lat + "," + lon;
+					$("#latlon").val(latlon);
+					addressLookup(latlon);
+				});
+			}
+		}
+
+		function addressLookup(latlon) {
+			var url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon + "&sensor=true";
+			$.getJSON(url, function(data) {
+				console.log(data);
+				$("#addrLookup").val(data.results[0].formatted_address);
+			})
+		}
+
+		function addrToLatlon(addr) {
+			var temp = addr.replace(/ /g,"+");
+			var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + temp + "&sensor=false";
+
+			$.getJSON(url, function(data) {
+				console.log(data);
+				$("#newLoc").val(data.results[0].formatted_address);
+				var latlon = data.results[0].geometry.location.lat + "," + data.results[0].geometry.location.lng;
+				$("#gLatlon").val(latlon);
+			});
+		}
+
+		$(document).ready(function() {
+			getLocation();
+
+			$("#geocode").bind("click", function() {
+				addrToLatlon($("#newLoc").val());
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="map-canvas"></div>
+	<h1>Geolocation & Reverse Geocoding</h1>
+	Lat/Lon: <input type="text" id="latlon" size="30">
+	<br>
+	Address Lookup: <input type="text" id="addrLookup" size="50">
+	<br>
+	<h1>Change Location & Geocoding</h1>
+	New Location: <input type="text" id="newLoc" size="50">
+	<input type="button" id="geocode" value="Go">
+	<br>
+	Lat/Lon: <input type="text" id="gLatlon" size="30">
+</body>
+</html>

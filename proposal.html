@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<head>
+	<title>ITP301 Project Proposal</title>
+	<script language="javascript"><!--/*<body></body></html>*/--></script>
+	<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {packages:['orgchart']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('string', 'Manager');
+        data.addRows([
+          ['Home', ''],
+          ['Photography', 'Home'],
+          	['Gallery 1', 'Photography'],
+          	['Gallery 2', 'Photography'],
+          	['Gallery 3', 'Photography'],
+          	['Gallery 4', 'Photography'],
+          ['Videography', 'Home'],
+          ['Resume', 'Home']
+        ]);
+        var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+        chart.draw(data, {allowHtml:true});
+      }
+    </script>
+    <style>
+    	#container {
+    		margin: 0 auto;
+    		width: 640px;
+    	}
+    </style>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>ITP301 Project Proposal</h1>
+		</div>
+		<div id="content">
+			<div class="section">
+				<h2>Flow Chart</h2>
+				<div id='chart_div'></div>
+			</div>
+			<div class="section">
+				<h2>Content</h2>
+				<p>
+					This website is a personal portfolio site. The Home page is a parallax scrolling page that features 5 slides:
+					<ol>
+						<li>Home/About</li>
+						<li>Photography</li>
+						<li>Videography</li>
+						<li>Resume</li>
+						<li>Contact</li>
+					</ol>
+					The Photography page features links to galleries, each of which is home to images. The Videography page contains embedded videos. The Resume page contains a visual list of works and a link to the actual resume. 
+				</p>
+			</div>
+			<div class="section">
+				<h2>Graphics</h2>
+				<p>
+					Each slide of the Home page will employ a different graphic as its background. Each will represent the section they are in. The second-level pages will contain simpler background graphics. The Photography, Videography and Resume pages will each contain graphics pertaining to their section. In other words, the Photography page will contain graphics that represent each gallery. The Videography page will contain embedded videos. The Resume page will contain graphics that represent the work. Each gallery page will contain the images categorized under that gallery. 
+				</p>
+			</div>
+			<div class="section">
+				<h2>Design and Style</h2>
+				<p>
+					The design and style of the entire site will be as minimal as possible. Although yet to be determined, the overall theme will be light. The slides of the Home page will feature big and bold text and defining backgrounds. These slides may stray from the light theme. The second-level pages and galleries will follow the overall theme and be minimalistic in order to place emphasis on the content. 
+				</p>
+			</div>
+			<div class="section">
+				<h2>JS/jQ Programming</h2>
+				<p>
+					1. Parallax Scrolling
+					<br>
+					The Home page will utilize this feature to scroll from one "slide" to another. This will be accomplished by fusing the HTML content with CSS, jQuery, and some external plugins such as Stellar.js or scrollorama. 
+				</p>
+				<p>
+					2. Placing Content Randomly
+					<br>
+					This feature will be implemented in the Photography and Resume pages. There will be placeholders for the content/graphics and jQuery and/or JS will be utilized to randomly place such content into the placeholders. 
+				</p>
+				<p>
+					3. jQuery/JS Gallery Functions
+					<br>
+					jQuery and/or JS will be used to implement the photo gallery functions. There are various ways to do this, including an interactive wall of images, thumbnail piling effect, lightbox, and gamma gallery. The videography page will most likely utilize a full-width slider to display embedded videos in a randomized order. 
+				</p>
+			</div>
+			<div class="section">
+				<h2>User Customization</h2>
+				<p>
+					Not much customization will be available to the user. The only exception may be changing the look and/or feel of the gallery pages. The user may be given the option to change the animations and the like. 
+				</p>
+			</div>
+			<div class="section">
+				<h2>DHTML/Layers</h2>
+				<p>
+					The parallax scrolling implementation on the Home page will have a relatively high complexity. It deals with animations, waypoints, and different backgrounds and layers. Depending on the gallery function used, the rest of the site will have a relatively lower complexity. 
+				</p>
+			</div>
+			<div class="section">
+				<h2>Scope of Site</h2>
+				<p>
+					The <a href="#chart_div">flow chart</a> above reflects the scope of the site. Each node represents a page, so tentatively, this site will have 8 pages.
+				</p>
+			</div>
+			<div class="section">
+				<h2>Inspiration</h2>
+				<p>
+					<a href="http://webdesign.tutsplus.com/tutorials/complete-websites/create-a-parallax-scrolling-website-using-stellar-js/">Create a Parallax Scrolling Website</a>
+					<br>
+					<a href="http://webdesign.tutsplus.com/tutorials/javascript-tutorials/create-a-sticky-navigation-header-using-jquery-waypoints/">Create a Sticky Navigation Header</a>
+					<br>
+					<a href="http://www.inserthtml.com/2012/09/rotating-menu/">CSS Rotating Menu</a>
+					<br>
+					<a href="http://www.inserthtml.com/2012/07/slide-backgrounds-jquery/">jQ Slide-In Backgrounds</a>
+					<br>
+					<a href="http://www.inserthtml.com/2012/02/making-interactive-wall-images-jquery/">Interactive Wall of Images</a>
+					<br>
+					<a href="http://www.inserthtml.com/2012/05/pinterest-style-box-layout/">Placing Content in a Randomly Generated Mosaic Effect</a>
+					<br>
+					<a href="http://www.noupe.com/javascript/javascript-turbo-head-js-speeds-up-your-website-73078.html">Speed Up JS</a>
+					<br>
+					<a href="http://tympanus.net/codrops/2013/02/26/full-width-image-slider/">Full-Width Image Slider</a>
+					<br>
+					<a href="http://tympanus.net/codrops/2012/11/21/adaptive-thumbnail-pile-effect-with-automatic-grouping/">Adaptive Thumbnail Pile Effect</a>
+					<br>
+					<a href="http://tympanus.net/codrops/2012/11/06/gamma-gallery-a-responsive-image-gallery-experiment/">Gamma Gallery</a>
+					<br>
+					<a href="http://tympanus.net/codrops/2012/11/13/baraja-a-plugin-for-spreading-items-in-a-card-like-fashion/">Spreading Items in Card-Like Fashion</a>
+					<br>
+					<a href="http://designshack.net/articles/javascript/40-awesome-jquery-plugins-you-need-to-check-out/">40 Awesome jQ Plugins</a>
+					<br>
+				</p>
+			</div>
+		</div>
+		<div id="footer">
+			<h3>Proposal by CJ Wang, Spring 2013</h3>
+		</div>
+	</div>
+</body>
+</html>
