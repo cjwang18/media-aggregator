@@ -275,60 +275,75 @@ function getVimeoTiles(num_tiles, callback) {
 weather
 */
 var wCodes = new Hashtable();
-wCodes.put(395, "dunno");
-wCodes.put(392, "dunno");
-wCodes.put(389, "tstorm3");
-wCodes.put(386, "tstorm2");
-wCodes.put(377, "hail");
-wCodes.put(374, "hail");
-wCodes.put(371, "snow4")
-wCodes.put(368, "snow3")
-wCodes.put(365, "sleet")
-wCodes.put(362, "sleet");
-wCodes.put(359, "shower3")
-wCodes.put(356, "shower2")
-wCodes.put(353, "shower1");
-wCodes.put(350, "sleet");
-wCodes.put(338, "snow5");
-wCodes.put(335, "snow5");
-wCodes.put(332, "snow4");
-wCodes.put(329, "snow3");
-wCodes.put(326, "snow2");
-wCodes.put(323, "snow1");
-wCodes.put(320, "sleet");
-wCodes.put(317, "sleet");
-wCodes.put(314, "shower3");
-wCodes.put(311, "light_rain");
-wCodes.put(308, "shower3");
-wCodes.put(305, "shower3");
-wCodes.put(302, "shower2");
-wCodes.put(299, "shower2");
-wCodes.put(296, "light_rain");
-wCodes.put(293, "light_rain");
-wCodes.put(284, "shower1");
-wCodes.put(281, "shower1");
-wCodes.put(266, "shower1");
-wCodes.put(263, "shower1");
-wCodes.put(260, "fog");
-wCodes.put(248, "fog");
-wCodes.put(230, "snow5");
-wCodes.put(227, "snow5");
-wCodes.put(200, "tstorm1");
-wCodes.put(185, "shower1");
-wCodes.put(182, "sleet");
-wCodes.put(179, "snow1");
-wCodes.put(176, "shower1");
-wCodes.put(143, "mist");
-wCodes.put(122, "overcast");
-wCodes.put(119, "cloudy5");
-wCodes.put(116, "cloudy2");
-wCodes.put(113, "clear");
+// thunderstorm
+wCodes.put(200, 'tstorm1');
+wCodes.put(201, 'tstorm2');
+wCodes.put(202, 'tstorm3');
+wCodes.put(210, 'tstorm1');
+wCodes.put(211, 'tstorm2');
+wCodes.put(212, 'tstorm3');
+wCodes.put(221, 'tstorm3');
+wCodes.put(230, 'tstorm1');
+wCodes.put(231, 'tstorm2');
+wCodes.put(232, 'tstorm3');
+// drizzle
+wCodes.put(300, 'light_rain');
+wCodes.put(301, 'light_rain');
+wCodes.put(302, 'light_rain');
+wCodes.put(310, 'light_rain');
+wCodes.put(311, 'light_rain');
+wCodes.put(312, 'light_rain');
+wCodes.put(313, 'light_rain');
+wCodes.put(314, 'light_rain');
+wCodes.put(321, 'light_rain');
+// rain
+wCodes.put(500, 'shower1');
+wCodes.put(501, 'shower2');
+wCodes.put(502, 'shower3');
+wCodes.put(503, 'shower3');
+wCodes.put(504, 'shower3');
+wCodes.put(511, 'shower3');
+wCodes.put(520, 'light_rain');
+wCodes.put(521, 'shower3');
+wCodes.put(522, 'shower3');
+wCodes.put(531, 'shower3');
+// snow
+wCodes.put(600, 'snow1');
+wCodes.put(601, 'snow2');
+wCodes.put(602, 'snow3');
+wCodes.put(611, 'sleet');
+wCodes.put(612, 'sleet');
+wCodes.put(615, 'sleet');
+wCodes.put(616, 'sleet');
+wCodes.put(620, 'snow4');
+wCodes.put(621, 'snow5');
+wCodes.put(622, 'snow5');
+// atmosphere
+wCodes.put(701, 'mist');
+wCodes.put(711, 'dunno');
+wCodes.put(721, 'dunno');
+wCodes.put(731, 'dunno');
+wCodes.put(741, 'fog');
+wCodes.put(751, 'dunno');
+wCodes.put(761, 'dunno');
+wCodes.put(762, 'dunno');
+wCodes.put(771, 'dunno');
+wCodes.put(781, 'dunno');
+// clear
+wCodes.put(800, 'clear');
+// clouds
+wCodes.put(801, 'cloudy1');
+wCodes.put(802, 'cloudy2');
+wCodes.put(803, 'cloudy4');
+wCodes.put(804, 'overcast');
 
 function weatherAPI(location, callback) {
-	var requestURL = "http://api.worldweatheronline.com/free/v1/weather.ashx?"
-	requestURL += "key=rjshwkprfangr3zp95hdupcb";
-	requestURL += "&q=" + location;
-	requestURL += "&num_of_days=1&format=json";
+	var latlon = location.split(',');
+	var requestURL = "https://api.openweathermap.org/data/2.5/weather?"
+	requestURL += "lat=" + latlon[0];
+	requestURL += "&lon=" + latlon[1];
+	requestURL += "&units=imperial";
+	requestURL += "&APPID=9fac64981d0af2b7974ac064f3e59cac";
 
 	$.ajax({
 		'url': requestURL,
@@ -336,7 +351,6 @@ function weatherAPI(location, callback) {
 		'dataType': 'jsonp',
 		//'jsonpCallback': 'cb',
 		'success': function(data, textStats, XMLHttpRequest) {
-			// console.log(data);
 			callback(data);
 		}
 	})
@@ -352,18 +366,19 @@ function getWeatherTiles(num_tiles, callback) {
 		if (apiData) {
 			var tiles = new Array();
 
-			var currCond = apiData.data.current_condition[0];
+			var currCond = apiData.weather[0];
+			var currTemp = apiData.main;
 
-			var wCode = currCond.weatherCode;
-			var img = "images/weather/" + wCodes.get(parseFloat(wCode));
+			var wCode = currCond.id;
+			var img = "images/weather/" + wCodes.get(parseInt(wCode));
 			if (!isDaytime(latlon)) {
 				img += "_night";
 			}
 			img += ".png";
 
-			var wCond = currCond.temp_F + "&deg;<br>";
-			wCond += currCond.weatherDesc[0].value;
-			wCond += "<br>" + locationShortName;
+			var wCond = currTemp.temp + "&deg;F<br>";
+			wCond += currCond.description;
+			wCond += "<br>" + apiData.name;
 
 			var logo = "images/logos/weather";
 			if (g_Theme == "light") {
@@ -384,16 +399,18 @@ function getWeatherTiles(num_tiles, callback) {
 
 /*
 wiki
+TODO: https://www.mediawiki.org/wiki/API:Showing_interesting_content
 */
 function wikiAPI(callback) {
 	var query = "http%3A%2F%2Fen.wikipedia.org%2Fw%2Fapi.php%3Faction%3Dfeaturedfeed%26format%3Djson%26feedformat%3Drss%26feed%3Dpotd";
-	var num = "-1";
-	var feedAPI = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=" + num + "&q=" + query + "&callback=?";
+	// var num = "-1";
+	var feedAPI = "https://cloud.feedly.com/v3/search/feeds?query=" + query + "&callback=?";
 
 	$.getJSON(feedAPI, function (data) {
-		var feed = data.responseData.feed;
-		var entries = feed.entries || [];
-		callback(entries);
+		console.log('wikiAPI', data);
+		// var feed = data.responseData.feed;
+		// var entries = feed.entries || [];
+		// callback(entries);
 	})
 	.fail(function () {
 		console.log("wikiAPI(): $.getJSON() failed");
@@ -440,59 +457,32 @@ function getWikiTiles(num_tiles, callback) {
 yelp
 */
 function yelpAPI(location, callback) {
-	var auth = {
-		consumerKey: "NBy5MBhqZ7tw2pjQBfLyhg",
-		consumerSecret: "a68mjvA6evwo8vYVLoI82-fa3mg",
-		accessToken: "otqR_UdiH0KOX8wIE-Lg_kILvD5crrZC",
-		accessTokenSecret: "b5440U68M68Fxo0nb4WK76xBFIk",
-		serviceProvider: {
-			signatureMethod: "HMAC-SHA1"
-		}
-	};
-
 	var terms = 'food';
-	var near = location;
+	var latlon = location.split(',');
 
-	var accessor = {
-		consumerSecret: auth.consumerSecret,
-		tokenSecret: auth.accessTokenSecret
+	var yelpApiEndpoint = 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search';
+	var yelpApiRequestHeaders = {
+		'Authorization': 'Bearer JQjai0NkoEUcZ47JLuXi15j24bjAH3lkk96AUmJ7Epl342QMa1-XlDcaLIN1TDy6iQ99WWmN1WCpza7GVgsDrJOmY9c-fd9OnVIfMxlGrEADjf_KrpLtKvA9rrQdW3Yx',
 	};
-
-	parameters = [];
-	parameters.push(['term', terms]);
-	parameters.push(['ll', near]);
-	parameters.push(['callback', 'cb']);
-	parameters.push(['oauth_consumer_key', auth.consumerKey]);
-	parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-	parameters.push(['oauth_token', auth.accessToken]);
-	parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
-
-	var message = {
-		'action': 'http://api.yelp.com/v2/search',
-		'method': 'GET',
-		'parameters': parameters
+	var yelpApiRequestParams = {
+		term: terms,
+		latitude: latlon[0],
+		longitude: latlon[1],
+		open_now: true,
 	};
-
-	OAuth.setTimestampAndNonce(message);
-	OAuth.SignatureMethod.sign(message, accessor);
-
-	var parameterMap = OAuth.getParameterMap(message.parameters);
-	parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature)
-	//console.log(parameterMap);
 
 	$.ajax({
-		'url': message.action,
-		'data': parameterMap,
+		'url': yelpApiEndpoint,
+		'headers': yelpApiRequestHeaders,
+		'data': yelpApiRequestParams,
 		'cache': true,
-		'dataType': 'jsonp',
-		//'jsonpCallback': 'cb',
 		'success': function(yelpdata, textStats, XMLHttpRequest) {
 			// console.log(yelpdata);
 			callback(yelpdata);
 		}
 	})
-	.fail(function() {
-		console.log("yelpAPI(): $.ajax() failed");
+	.fail(function(resp) {
+		console.log("yelpAPI(): $.ajax() failed", resp);
 		callback(null);
 	});
 }
@@ -611,10 +601,11 @@ function getLocation(callback) {
 
 function getAggregatorTilesHelper(tileType, callback) {
 
+	// TODO: 500px API will be deprecated soon
 	if (tileType[0] == "500px") {
-		//console.log("calling 500px API");
+		// console.log("calling 500px API");
 		get500pxTiles(tileType[1], function(tiles) {
-			//console.log("returning from 500pxAPI call");
+			// console.log("returning from 500pxAPI call", tiles);
 			if (tiles) {
 				callback(tiles);
 			} else {
@@ -623,6 +614,7 @@ function getAggregatorTilesHelper(tileType, callback) {
 		});
 	}
 
+	// TODO: use soundcloud or some other audio service
 	if (tileType[0] == "hypem") {
 		//console.log("calling hypem API");
 		getHypemTiles(tileType[1], function(tiles) {
@@ -635,6 +627,7 @@ function getAggregatorTilesHelper(tileType, callback) {
 		});
 	}
 
+	// TODO: check API in newsAPI function (data.responseData is null, can't get property 'feed')
 	if (tileType[0] == "news") {
 		//console.log("calling news API");
 		getNewsTiles(tileType[1], function(tiles) {
@@ -667,6 +660,7 @@ function getAggregatorTilesHelper(tileType, callback) {
 		});
 	}
 
+	// TODO: check API in wikiAPI function (data.responseData is null, can't get property 'feed')
 	if (tileType[0] == "wiki") {
 		getWikiTiles(tileType[1], function(tiles) {
 			if (tiles) {
@@ -733,13 +727,16 @@ function initializeAggregator() {
 
 	var tileTypes = new Hashtable();
 	tileTypes.put("500px", $("input[name='500px']").val());
-	tileTypes.put("hypem", $("input[name='hypem']").val());
-	tileTypes.put("news", $("input[name='news']").val());
+	// TODO switch hypem to soundcloud
+	// tileTypes.put("hypem", $("input[name='hypem']").val());
+	// TODO: find a different new api
+	// tileTypes.put("news", $("input[name='news']").val());
 	tileTypes.put("vimeo", $("input[name='vimeo']").val());
 	tileTypes.put("weather", 1);
-	tileTypes.put("wiki", 1);
+	// TODO: refactor how to get wikipedia POTD
+	// tileTypes.put("wiki", 1);
 	tileTypes.put("yelp", $("input[name='yelp']").val());
-	tileTypes.put("youtube", $("input[name='youtube']").val());
+	// tileTypes.put("youtube", $("input[name='youtube']").val());
 
 	getLocation(function (ll) {
 		latlon = ll;
@@ -747,7 +744,6 @@ function initializeAggregator() {
 		getAggregatorTiles(tileTypes, function (tiles) {
 			var tempAggTiles = tiles;
 			var aggTiles = randomGetFromDataArray(tempAggTiles, tempAggTiles.length);
-			console.log("initializeAggregator(): final number of tiles = " + aggTiles.length);
 			setAggregatorTiles(aggTiles);
 			//setTimeout("centerImages();", 500);
 		});
@@ -755,7 +751,6 @@ function initializeAggregator() {
 }
 
 function setAggregatorTiles(tiles) {
-
 	var aggHTML = "";
 	var numExistingTiles = $(".item").length;
 	//alert("numExistingTiles = " + numExistingTiles);
