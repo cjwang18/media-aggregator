@@ -236,7 +236,7 @@ function getNewsTiles(num_tiles, callback) {
 vimeo
 */
 function vimeoAPI(callback) {
-	var vimeoAPI = "http://vimeo.com/api/v2/channel/staffpicks/videos.json?callback=?";
+	var vimeoAPI = "https://vimeo.com/api/v2/channel/staffpicks/videos.json?callback=?";
 	$.getJSON(vimeoAPI, {format: "json"}, function (videos) {
 		callback(videos);
 	})
@@ -726,8 +726,9 @@ This function initializes the aggregator with the defaults.
 function initializeAggregator() {
 
 	var tileTypes = new Hashtable();
-	tileTypes.put("500px", $("input[name='500px']").val());
-	// TODO switch hypem to soundcloud
+	// TODO: 500px API is now deprecated
+	// tileTypes.put("500px", $("input[name='500px']").val());
+	// TODO: switch hypem to soundcloud
 	// tileTypes.put("hypem", $("input[name='hypem']").val());
 	// TODO: find a different new api
 	// tileTypes.put("news", $("input[name='news']").val());

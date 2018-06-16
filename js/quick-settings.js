@@ -106,7 +106,7 @@ function setLocationField(gcType, addrData) {
 }
 
 function llToAddr(latlon, callback) {
-	var url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon;
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon;
 	$.getJSON(url, function(data) {
 		callback(data);
 	});
@@ -114,7 +114,7 @@ function llToAddr(latlon, callback) {
 
 function addrToLL(addr, callback) {
 	var temp = addr.replace(/ /g,"+");
-	var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + temp;
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + temp;
 
 	$.getJSON(url, function(data) {
 		//console.log(data);
